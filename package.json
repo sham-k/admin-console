@@ -9,7 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc -b",
+    "typecheck": "tsc",
     "format": "prettier --write src"
   },
   "dependencies": {
