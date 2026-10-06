@@ -1,0 +1,2675 @@
+/* ==========================================================================
+   Tokens. Every text/background pair below meets WCAG AA (4.5:1 for text,
+   3:1 for UI boundaries like input borders and focus rings) in both themes.
+   ========================================================================== */
+:root {
+  color-scheme: light;
+  --bg: #f3f4f7;
+  --surface: #ffffff;
+  --surface-2: #f0f2f5;
+  --surface-hover: #cae657;
+  --border: #dde1e7;
+  --border-strong: #737c8c;
+  --text: #161a21;
+  --text-muted: #4f5766;
+  --primary: #36393f;
+  --primary-hover: #222429;
+  --primary-text: #ffffff;
+  --primary-soft: #e8eefc;
+  --link: #1f47b0;
+  --danger: #b42318;
+  --danger-hover: #912018;
+  --danger-soft: #fdecea;
+  --danger-text: #8f1d14;
+  --warning-soft: #fff4dc;
+  --warning-text: #6b4100;
+  --warning-border: #e3b34c;
+  --info-soft: #e8eefc;
+  --info-text: #1c3f9e;
+  --success-text: #14602f;
+  --success-soft: #e3f6e9;
+  --focus: #2450c4;
+  --skeleton: #e6e9ee;
+  --shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 1px 3px rgb(16 24 40 / 10%);
+  --shadow-lg: 0 12px 32px rgb(16 24 40 / 18%);
+  /* Stacked shadows (tight contact -> wide ambient) plus a top highlight read as a raised surface. */
+  --shadow-raised:
+    inset 0 1px 0 rgb(255 255 255 / 70%),
+    0 1px 1px rgb(16 24 40 / 8%),
+    0 2px 4px rgb(16 24 40 / 8%),
+    0 8px 16px rgb(16 24 40 / 10%),
+    0 20px 40px rgb(16 24 40 / 14%);
+
+  --badge-active-bg: #dcf5e4;
+  --badge-active-fg: #14602f;
+  --badge-invited-bg: #fff1d1;
+  --badge-invited-fg: #6b4100;
+  --badge-suspended-bg: #fde4e1;
+  --badge-suspended-fg: #8f1d14;
+
+  --radius: 8px;
+  --radius-sm: 6px;
+  --topbar-h: 56px;
+  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-heading: 'Space Grotesk', var(--font);
+  /* Row hover glass: tint, top highlight, bottom shade. */
+  /* Liquid glass pill (row hover, dropdown highlight): a frosted, faintly
+     violet pane, brighter at the top, with a white rim, an inner glow along
+     the bottom for thickness, and a soft shadow so it floats. */
+  --glass-fill:
+    linear-gradient(to bottom, rgb(255 255 255 / 75%), rgb(255 255 255 / 20%)), rgb(110 105 235 / 12%);
+  --glass-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 100%),
+    inset 0 0 0 1px rgb(255 255 255 / 70%),
+    inset 0 -8px 14px -6px rgb(110 105 235 / 22%),
+    0 0 0 1px rgb(90 90 160 / 16%),
+    0 6px 16px -4px rgb(60 60 130 / 22%),
+    0 1px 2px rgb(60 60 130 / 10%);
+  /* Pulsing Active dot in the users table. */
+  --neon-green: #39ff14;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Keep focused elements from hiding under the sticky header (WCAG 2.4.11). */
+  scroll-padding-top: calc(var(--topbar-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* No page scrolls sideways (wide tables scroll inside their own box), so
+   turn off the sideways rubber-band bounce that would otherwise pull the
+   page aside and show a white strip down one edge. */
+html,
+body {
+  overscroll-behavior-x: none;
+}
+
+/* While the landing page is shown (it sets this class on <html>), colour the
+   back layer like its gradient so the vertical bounce on phones reveals
+   colour instead of a white strip. */
+html.is-landing,
+html.is-landing body {
+  background: #8f8fec;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--link);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: var(--primary-text);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Top bar & navigation
+   ========================================================================== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 1240px;
+  height: var(--topbar-h);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Wordmark (components/Padlock.tsx): the A of "Admin" is a gold padlock that
+   sits on the text baseline like a capital letter. The lock body fills the
+   middle of the icon's square, so the negative margins trim its side space
+   and the nudge down lands the body's bottom on the baseline. */
+.wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.wordmark .padlock {
+  flex-shrink: 0;
+  position: relative;
+  top: 0.12em;
+  width: 1.55em;
+  height: 1.55em;
+  margin-right: -0.17em;
+  margin-left: -0.25em;
+  overflow: visible;
+}
+
+/* Unlocking: the shackle pivots on its right leg, which stays seated, and its
+   left leg swings out of the body with a slight overshoot, like a real click. */
+.padlock__shackle {
+  transform-box: view-box;
+  transform-origin: 21.5px 13.5px;
+  transition: transform 550ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.padlock.is-open .padlock__shackle {
+  transform: rotate(28deg);
+}
+
+.nav__list {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__link {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav__link:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.nav__link[aria-current='page'] {
+  color: var(--text);
+  background: var(--primary-soft);
+  box-shadow: inset 0 -2px 0 var(--primary);
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.icon-button.topbar__menu-toggle {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .topbar__inner {
+    gap: 12px;
+    padding: 0 16px;
+  }
+  .icon-button.topbar__menu-toggle {
+    display: inline-flex;
+    order: -1;
+  }
+  .nav {
+    display: none;
+    position: absolute;
+    top: var(--topbar-h);
+    left: 0;
+    right: 0;
+    padding: 8px 16px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+  }
+  .nav--open {
+    display: block;
+  }
+  .nav__list {
+    flex-direction: column;
+  }
+  .nav__link {
+    min-height: 44px;
+  }
+  .topbar__action-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+
+/* ==========================================================================
+   Page scaffolding
+   ========================================================================== */
+.main {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+}
+
+.main:focus {
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: 20px 16px 48px;
+  }
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header, toolbar and table fade up one after another on first render.
+   `backwards` fill drops the transform once done, so it can't affect
+   positioned menus inside. Reduced motion is handled globally above. */
+.page--fade-in > * {
+  animation: fade-up 1200ms ease-out backwards;
+}
+
+.page--fade-in > :nth-child(2) {
+  animation-delay: 250ms;
+}
+
+.page--fade-in > :nth-child(n + 3) {
+  animation-delay: 500ms;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-header h1 {
+  font-family: var(--font-heading);
+  font-size: 1.625rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.page-header__subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+.page-header--user {
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.page-header__title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The email wraps at its <wbr> before the @, never mid-word. */
+.page-header__email {
+  overflow-wrap: break-word;
+}
+
+.page-header__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+/* Phones: the header's action buttons drop to their own full-width row, so
+   the name and email get the whole width instead of wrapping mid-word. */
+@media (max-width: 640px) {
+  .page-header h1 {
+    font-size: 1.375rem;
+  }
+  .page-header--user {
+    gap: 12px 14px;
+  }
+  .page-header__actions {
+    flex-basis: 100%;
+    align-items: stretch;
+  }
+  .page-header > .button,
+  .page-header__actions > .button {
+    flex-basis: 100%;
+    width: 100%;
+  }
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.breadcrumb li + li::before {
+  content: '/';
+  margin-right: 8px;
+  color: var(--border-strong);
+}
+
+.breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 120ms,
+    border-color 120ms,
+    box-shadow 160ms,
+    transform 160ms;
+}
+
+.button--sm {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 0.875rem;
+}
+
+.button--primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 12%),
+    0 2px 4px rgb(16 24 40 / 18%),
+    0 6px 14px rgb(16 24 40 / 22%);
+}
+
+.button--primary:hover {
+  background: var(--primary-hover);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 12%),
+    0 4px 8px rgb(16 24 40 / 20%),
+    0 10px 22px rgb(16 24 40 / 26%);
+  transform: translateY(-1px);
+}
+
+.button--primary:active {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 8%),
+    0 1px 2px rgb(16 24 40 / 20%);
+  transform: translateY(0);
+}
+
+.button--secondary {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.button--secondary:hover {
+  background: var(--surface-2);
+}
+
+/* Golden yellow key on the "Send password reset" button. */
+.button--reset .icon {
+  color: #e0a100;
+}
+
+.button--danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.button--danger:hover {
+  background: var(--danger-hover);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--text);
+}
+
+.button--ghost:hover {
+  background: var(--surface-2);
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button[data-busy] {
+  cursor: progress;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Still ≥ 24×24 CSS px (WCAG 2.5.8 target size). */
+.icon-button--sm {
+  width: 28px;
+  height: 28px;
+}
+
+/* ==========================================================================
+   Form controls
+   ========================================================================== */
+.input,
+.select {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.select {
+  padding-right: 32px;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 17px) 55%,
+    calc(100% - 12px) 55%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* Custom dropdown (components/Select.tsx): the list opens directly under
+   the field, at full readable size, in every browser. */
+.custom-select {
+  position: relative;
+}
+
+.custom-select__button {
+  display: block;
+  text-align: left;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.custom-select__button[aria-expanded='true'] {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 1px var(--focus);
+}
+
+.custom-select__list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  min-width: 100%;
+  max-height: 280px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  animation: custom-select-in 120ms ease-out;
+}
+
+.custom-select__list[hidden] {
+  display: none;
+}
+
+@keyframes custom-select-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.custom-select__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Highlighted option: the same liquid glass pill as the table-row hover. */
+.custom-select__option {
+  border-radius: 999px;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.custom-select__option.is-active {
+  background: var(--glass-fill);
+  box-shadow: var(--glass-shadow);
+}
+
+.custom-select__option[aria-selected='true'] {
+  font-weight: 600;
+}
+
+.input--sm,
+.select--sm {
+  min-height: 32px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.input:hover,
+.select:hover {
+  border-color: var(--text-muted);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 1px var(--danger);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fields__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 560px) {
+  .fields__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field__label {
+  padding: 0;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.field__hint {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.field__error {
+  display: flex;
+  gap: 6px;
+  color: var(--danger-text);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.field__error::before {
+  content: '⚠' / '';
+}
+
+.field__note {
+  padding: 6px 10px;
+  border-left: 3px solid var(--warning-border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--warning-soft);
+  color: var(--warning-text);
+  font-size: 0.8125rem;
+}
+
+.choice-group__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 8px;
+}
+
+/* Role/status radio cards.
+   Unselected: faint slate-200 border.
+   Selected: indigo-600 border, a crisp double ring (Tailwind ring-2
+   ring-indigo-600 ring-offset-2: a 2px white gap, then a 2px indigo ring,
+   drawn as two box-shadows) and an indigo-50/40 tint. Selecting plays a
+   short spring: the ring overshoots and settles, the card dips and pops,
+   and the tint flashes brighter before easing back. */
+.choice {
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --choice-ring: #557ee5;
+
+  /* Relative + clipped so the accent bar below sits inside the rounded corners. */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  /* transition-all duration-200, with a springy curve for deselecting too. */
+  transition: all 200ms var(--spring);
+}
+
+.choice:hover {
+  border-color: #cbd5e1;
+}
+
+/* Left accent bar: hidden and zero-height when unselected; on selection it's
+   drawn down the left edge to full height (bg-indigo-600, duration-300
+   ease-in-out), and retracts the same way when deselected. */
+.choice::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background: #4f46e5;
+  opacity: 0;
+  transition:
+    height 300ms ease-in-out,
+    opacity 300ms ease-in-out;
+  pointer-events: none;
+}
+
+.choice:has(input:checked)::before {
+  height: 100%;
+  opacity: 1;
+}
+
+.choice:active {
+  transform: scale(0.985);
+}
+
+.choice:has(input:checked) {
+  border-color: var(--choice-ring);
+  background-color: rgb(238 242 255 / 40%);
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px var(--choice-ring);
+  animation: choice-spring 420ms var(--spring);
+}
+
+@keyframes choice-spring {
+  0% {
+    transform: scale(0.97);
+    background-color: rgb(224 231 255 / 90%);
+    box-shadow:
+      0 0 0 0 #ffffff,
+      0 0 0 0 var(--choice-ring);
+  }
+  45% {
+    transform: scale(1.015);
+    box-shadow:
+      0 0 0 3px #ffffff,
+      0 0 0 6px var(--choice-ring);
+  }
+  100% {
+    transform: scale(1);
+    background-color: rgb(238 242 255 / 40%);
+    box-shadow:
+      0 0 0 2px #ffffff,
+      0 0 0 4px var(--choice-ring);
+  }
+}
+
+.choice:has(input:checked) input {
+  accent-color: var(--choice-ring);
+}
+
+/* Keyboard focus sits just outside the 4px ring so the two never overlap. */
+.choice:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 6px;
+}
+
+.choice input,
+.radio input,
+.checkbox input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+
+.choice__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.choice__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+/* Role and status icons. Status icons reuse the badge colors so the card
+   matches the badge shown in the users table. */
+.choice__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  /* Icon micro-interaction, independent of the card's own spring
+     (Tailwind: transition-transform duration-300 ease-out, with the card
+     as the `group`). */
+  transition: transform 300ms ease-out;
+}
+
+/* Selected: the icon sits lifted 2px (-translate-y-0.5). */
+.choice:has(input:checked) .choice__icon {
+  transform: translateY(-2px);
+}
+
+/* Hovered: grows and tilts (group-hover:scale-110 group-hover:rotate-12),
+   keeping the lift if the card is also selected. */
+.choice:hover .choice__icon {
+  transform: scale(1.1) rotate(12deg);
+}
+
+.choice:hover:has(input:checked) .choice__icon {
+  transform: translateY(-2px) scale(1.1) rotate(12deg);
+}
+
+fieldset:disabled .choice:hover .choice__icon {
+  transform: none;
+}
+
+.choice__icon--admin {
+  background: var(--primary-soft);
+  color: var(--info-text);
+}
+
+.choice__icon--active {
+  background: var(--badge-active-bg);
+  color: var(--badge-active-fg);
+}
+
+.choice__icon--invited {
+  background: var(--badge-invited-bg);
+  color: var(--badge-invited-fg);
+}
+
+.choice__icon--suspended {
+  background: var(--badge-suspended-bg);
+  color: var(--badge-suspended-fg);
+}
+
+.choice:has(input:checked) .choice__icon {
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.choice__description {
+  /* Tailwind slate-600: softer than the default muted gray, still 7.5:1 on white. */
+  color: #475569;
+  font-size: 0.8125rem;
+}
+
+fieldset:disabled .choice {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.radio,
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  cursor: pointer;
+}
+
+.radio input,
+.checkbox input {
+  margin: 0;
+}
+
+
+.alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.alert p {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.alert--error {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger-text);
+}
+
+.alert--warning {
+  border-color: var(--warning-border);
+  background: var(--warning-soft);
+  color: var(--warning-text);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.badge--active {
+  background: var(--badge-active-bg);
+  color: var(--badge-active-fg);
+}
+
+/* Live "online" pulse on Active dots in the users table: a ring grows out of
+   the dot and fades. Animates transform/opacity only, so 100 rows stay cheap. */
+.table .badge--active .badge__dot {
+  position: relative;
+  /* Neon green with a glow; a thin dark rim keeps it visible on the pale badge. */
+  background: var(--neon-green);
+  box-shadow:
+    0 0 0 1px rgb(20 96 47 / 35%),
+    0 0 6px var(--neon-green);
+}
+
+.table .badge--active .badge__dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--neon-green);
+  animation: dot-pulse 1.8s ease-out infinite;
+}
+
+@keyframes dot-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+.badge--invited {
+  background: var(--badge-invited-bg);
+  color: var(--badge-invited-fg);
+}
+
+.badge--suspended {
+  background: var(--badge-suspended-bg);
+  color: var(--badge-suspended-fg);
+}
+
+.role {
+  font-weight: 500;
+}
+
+.role--admin {
+  font-weight: 700;
+}
+
+.tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.tag--info {
+  background: var(--info-soft);
+  color: var(--info-text);
+}
+
+.tag--danger {
+  background: var(--danger-soft);
+  color: var(--danger-text);
+}
+
+.toasts {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  width: min(420px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+.toasts__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 14px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  animation: toast-in 160ms ease-out;
+}
+
+.toast--success {
+  border-left-color: var(--success-text);
+}
+
+.toast--success > .icon {
+  color: var(--success-text);
+}
+
+.toast--error {
+  border-left-color: var(--danger);
+}
+
+.toast--error > .icon {
+  color: var(--danger-text);
+}
+
+.toast__message {
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.toast__action {
+  font-weight: 600;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ==========================================================================
+   List page
+   ========================================================================== */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.toolbar__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 150px;
+}
+
+.toolbar__field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.toolbar__field--grow {
+  flex: 1 1 280px;
+}
+
+/* Tablets: search gets the full first row and the three dropdowns share
+   the second evenly, instead of "Sort by" wrapping onto a row by itself. */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .toolbar__field--grow {
+    flex-basis: 100%;
+  }
+  .toolbar__field:not(.toolbar__field--grow) {
+    flex: 1 1 0;
+  }
+}
+
+.toolbar__clear {
+  min-height: 40px;
+}
+
+@media (max-width: 640px) {
+  .toolbar__field {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+  }
+  .toolbar__field--grow {
+    flex-basis: 100%;
+  }
+}
+
+.search-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input > .icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-input .input {
+  padding-left: 38px;
+  padding-right: 64px;
+}
+
+.search-input__kbd {
+  position: absolute;
+  right: 10px;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+
+@media (hover: none) {
+  .search-input__kbd {
+    display: none;
+  }
+  .search-input .input {
+    padding-right: 12px;
+  }
+}
+
+.panel {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+}
+
+/* Phones: the users table runs edge to edge instead of floating inside
+   16px side margins, so there's no pale strip down either side. */
+@media (max-width: 640px) {
+  .panel {
+    margin-right: -16px;
+    margin-left: -16px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+.panel > .alert {
+  margin: 12px 16px 0;
+}
+
+.panel__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.result-count {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 30%;
+  background: var(--primary);
+  animation: progress 1s ease-in-out infinite;
+}
+
+@keyframes progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(340%);
+  }
+}
+
+.table-wrap {
+  overflow-x: auto;
+  transition: opacity 150ms;
+}
+
+.table-wrap[data-refreshing] {
+  opacity: 0.6;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Headers: small, muted, uppercase (Tailwind text-xs font-semibold
+   text-slate-500 uppercase tracking-wider). The slate-50 background keeps
+   the slate-500 text at 4.55:1, above WCAG AA. */
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Row hover: a flat, quiet background shift (Tailwind hover:bg-slate-50/80). */
+.table tbody tr {
+  transition: background-color 150ms ease;
+}
+
+.table tbody tr:hover {
+  background-color: rgb(248 250 252 / 80%);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table__actions {
+  width: 1%;
+  text-align: right !important;
+}
+
+.sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  margin: 0 -6px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  font-weight: inherit;
+  /* Buttons don't inherit these by default; keep header casing/tracking. */
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sort-button:hover,
+th[aria-sort] .sort-button {
+  color: var(--text);
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.user-cell__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.user-cell__name {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.user-cell__name:hover {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.user-cell__email {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  /* Wraps at the <wbr> before @ first; splits mid-word only on very narrow screens. */
+  overflow-wrap: anywhere;
+}
+
+.show-sm {
+  display: none;
+}
+
+.user-cell__role {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* Phones: "Member · ● Active" on one line under the email. */
+@media (max-width: 640px) {
+  .user-cell__meta.show-sm {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hide-sm {
+    display: none;
+  }
+  .show-sm {
+    display: inline;
+  }
+  .user-cell .avatar,
+  .user-cell .skeleton--circle {
+    display: none;
+  }
+  .table th,
+  .table td {
+    padding: 10px 12px;
+  }
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: hsl(var(--avatar-hue, 220) 60% 88%);
+  color: hsl(var(--avatar-hue, 220) 60% 22%);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: 0.75rem;
+}
+
+.avatar--lg {
+  width: 56px;
+  height: 56px;
+  font-size: 1.125rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .avatar {
+    background: hsl(var(--avatar-hue, 220) 35% 26%);
+    color: hsl(var(--avatar-hue, 220) 70% 88%);
+  }
+}
+
+.menu {
+  position: relative;
+  display: inline-block;
+}
+
+.menu__list {
+  position: fixed;
+  z-index: 30;
+  max-height: 220px;
+  overflow-y: auto;
+  min-width: 200px;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  text-align: left;
+}
+
+.menu__item {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu__item:hover,
+.menu__item:focus {
+  background: var(--surface-2);
+  outline: none;
+}
+
+.menu__item:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--focus);
+}
+
+.menu__item--danger {
+  color: var(--danger-text);
+}
+
+.menu__item[aria-disabled='true'] {
+  color: var(--text-muted);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.pagination__size,
+.pagination__jump,
+.pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Rows-per-page segmented control (10 · 25 · 50 · 100). */
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.segmented__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background-color 120ms,
+    color 120ms;
+}
+
+/* The radio stays in the DOM for keyboard arrows and screen readers. */
+.segmented__option input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segmented__option:hover {
+  color: var(--text);
+}
+
+.segmented__option:has(input:checked) {
+  background: var(--primary);
+  color: var(--primary-text);
+  box-shadow: 0 1px 3px rgb(16 24 40 / 25%);
+}
+
+.segmented__option:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Phones: rows-per-page gets its own full-width row with big tap targets,
+   and the page controls sit centred underneath. */
+@media (max-width: 640px) {
+  .pagination__size {
+    flex-basis: 100%;
+    justify-content: space-between;
+  }
+  .segmented__option {
+    min-height: 40px;
+  }
+  .pagination__controls {
+    flex-basis: 100%;
+    justify-content: center;
+  }
+}
+
+.pagination__controls {
+  gap: 4px;
+}
+
+.pagination__jump {
+  margin: 0 8px;
+  white-space: nowrap;
+}
+
+.pagination__input {
+  width: 4.5rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Empty / error / loading states
+   ========================================================================== */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 24px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.state > .icon {
+  color: var(--text-muted);
+}
+
+.state--error > .icon {
+  color: var(--danger-text);
+}
+
+.state__title {
+  color: var(--text);
+  font-size: 1.0625rem;
+}
+
+.state__body {
+  max-width: 44ch;
+}
+
+.state__meta {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.state .button {
+  margin-top: 8px;
+}
+
+.skeleton {
+  display: block;
+  height: 0.9rem;
+  border-radius: 4px;
+  background: var(--skeleton);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton--sm {
+  height: 0.7rem;
+}
+
+.skeleton--circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton--input {
+  height: 40px;
+}
+
+.skeleton-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ==========================================================================
+   Detail page
+   ========================================================================== */
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Nudge the Details card right, into the page's side padding. Desktop only:
+   when the cards stack on narrow screens it stays aligned with the form. */
+@media (min-width: 901px) {
+  .card--aside {
+    position: relative;
+    left: 16px;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  /* Flat white card, slate-200 border, soft shadow
+     (Tailwind's bg-white / border-slate-200 / shadow-sm). */
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius);
+  background: #ffffff;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card__title {
+  font-size: 1.0625rem;
+}
+
+.card__footer {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+}
+
+.meta-list dt {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.meta-list dd {
+  margin: 2px 0 0;
+}
+
+.meta-list__id {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta-list code {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+}
+
+/* ==========================================================================
+   Dialog
+   ========================================================================== */
+.dialog {
+  width: min(var(--dialog-w, 560px), calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Blur the page behind open dialogs. The dim is lighter than before so the
+   blur, not just the darkness, does the work of pushing the page back. */
+.dialog::backdrop {
+  background: rgb(10 14 22 / 35%);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.dialog--sm {
+  --dialog-w: 440px;
+}
+
+.dialog--lg {
+  --dialog-w: 720px;
+}
+
+.dialog__surface {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 34px);
+}
+
+.dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 0;
+}
+
+.dialog__title {
+  font-size: 1.1875rem;
+  line-height: 1.35;
+}
+
+.dialog__description {
+  padding: 6px 20px 0;
+  color: var(--text-muted);
+}
+
+.dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 20px;
+  overflow-y: auto;
+}
+
+.dialog__body form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dialog__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: 0 0 12px 12px;
+}
+
+.dialog__description + .dialog__footer {
+  margin-top: 18px;
+}
+
+.dialog__footer-start {
+  margin-right: auto;
+  font-size: 0.875rem;
+}
+
+/* Phones: the checkbox gets its own row and the buttons share the next
+   one evenly, so a button never drops onto a line by itself. */
+@media (max-width: 480px) {
+  .dialog__footer-start {
+    flex-basis: 100%;
+  }
+  .dialog__footer > .button {
+    flex: 1 1 0;
+  }
+}
+
+.diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.diff-table th,
+.diff-table td {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.diff-table thead th {
+  background: var(--surface-2);
+}
+
+.diff-table__conflict {
+  background: var(--danger-soft);
+}
+
+.conflict-help {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.conflict-help li + li {
+  margin-top: 4px;
+}
+
+/* Windows High Contrast / forced colours: keep boundaries visible. */
+@media (forced-colors: active) {
+  .badge,
+  .tag,
+  .choice,
+  .button {
+    border: 1px solid CanvasText;
+  }
+  .nav__link[aria-current='page'] {
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 480px) {
+  .table th,
+  .table td {
+    padding: 10px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    justify-content: center;
+    padding: 10px 8px;
+  }
+  .pagination__jump {
+    margin: 0 2px;
+    gap: 6px;
+  }
+  .pagination__controls .icon-button {
+    width: 32px;
+  }
+}
+
+/* Very small phones (e.g. iPhone SE): drop the visible "Page" word (the input
+   keeps it as its accessible label) so all four arrows fit on one row. */
+@media (max-width: 400px) {
+  .pagination__controls {
+    gap: 0;
+  }
+  .pagination__jump label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .pagination__input {
+    width: 3.75rem;
+  }
+}
+
+/* ==========================================================================
+   Landing page (pages/LandingPage.tsx)
+   Violet backdrop with frosted "liquid glass" surfaces on top. All text is
+   white or near-white on deep violet, well above WCAG AA contrast.
+   ========================================================================== */
+.landing {
+  --landing-ink: #ffffff;
+  --landing-muted: rgb(255 255 255 / 80%);
+  --landing-deep: #24186b;
+  --landing-glass-bg: linear-gradient(to bottom, rgb(255 255 255 / 18%), rgb(255 255 255 / 7%));
+  --landing-glass-border: rgb(255 255 255 / 32%);
+  --landing-glass-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    inset 0 -12px 24px -12px rgb(255 255 255 / 18%),
+    0 24px 48px -16px rgb(15 8 60 / 55%);
+
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  color: var(--landing-ink);
+  background: linear-gradient(160deg, #e0deec 0%, #3b7de7 45%, #4b63e9 72%, #ccc8e8 100%);
+  isolation: isolate;
+}
+
+.landing :focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Blurred colour blobs that drift slowly, like the waves in the reference. */
+.landing__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.landing__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.7;
+  animation: landing-drift 18s ease-in-out infinite alternate;
+}
+
+.landing__blob--1 {
+  top: -15%;
+  left: -10%;
+  width: 55vw;
+  height: 55vw;
+  background: #8a6cff;
+}
+
+.landing__blob--2 {
+  top: 30%;
+  right: -15%;
+  width: 50vw;
+  height: 50vw;
+  background: #4f7dff;
+  animation-delay: -6s;
+}
+
+.landing__blob--3 {
+  bottom: -20%;
+  left: 20%;
+  width: 45vw;
+  height: 45vw;
+  background: #e9e4ed;
+  opacity: 0.5;
+  animation-delay: -12s;
+}
+
+@keyframes landing-drift {
+  to {
+    transform: translate(6vw, 4vh) scale(1.08);
+  }
+}
+
+/* --- Shared glass surfaces ------------------------------------------------ */
+.landing__glass-button,
+.landing__card {
+  border: 1px solid var(--landing-glass-border);
+  background: var(--landing-glass-bg);
+  box-shadow: var(--landing-glass-shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+
+.landing__glass-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  color: var(--landing-ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.landing__glass-button:hover {
+  background: linear-gradient(to bottom, rgb(255 255 255 / 28%), rgb(255 255 255 / 12%));
+  transform: translateY(-1px);
+}
+
+.landing__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--landing-deep);
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow:
+    inset 0 -2px 0 rgb(36 24 107 / 12%),
+    0 12px 28px -8px rgb(15 8 60 / 60%);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.landing__cta:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -2px 0 rgb(36 24 107 / 12%),
+    0 18px 36px -10px rgb(15 8 60 / 70%);
+}
+
+/* --- Layout ---------------------------------------------------------------- */
+.landing__nav,
+.landing__main,
+.landing__footer {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-right: 24px;
+  padding-left: 24px;
+}
+
+.landing__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.landing__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.landing__nav .landing__glass-button {
+  white-space: nowrap;
+}
+
+/* Small phones: keep "Admin Console" and its button on one line each. */
+@media (max-width: 400px) {
+  .landing__brand {
+    gap: 6px;
+    font-size: 0.9375rem;
+  }
+  .landing__nav .landing__glass-button {
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 0.875rem;
+  }
+}
+
+/* On the colourful landing background the A-lock uses a brighter gold and a
+   faint shadow so it stays distinct from the lavender behind it. */
+.landing__brand {
+  --padlock-gold: #ffcc4d;
+}
+
+.landing__brand .padlock {
+  filter: drop-shadow(0 1px 2px rgb(40 20 90 / 45%));
+}
+
+.landing__hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 0 24px;
+  text-align: center;
+}
+
+/* --- Interactive aurora ----------------------------------------------------
+   Sits behind the hero text (z-index -1 inside the page's isolated stacking
+   context) and bleeds past the content column; .landing clips the overflow.
+   Three blurred colour bands sway slowly; a vivid purple-pink glow follows
+   the cursor. The glow's top-left is pulled back by half its size so the
+   translate(x, y) set from React lands its centre on the cursor. */
+.landing__aurora {
+  position: absolute;
+  inset: -120px -25vw -60px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Liquid blobs. Positions are relative to the aurora box, which reaches
+   120px above the hero and 25vw past each side. */
+.landing__liquid {
+  position: absolute;
+  display: block;
+}
+
+/* Deep plum SVG blob, centred behind the headline. Its outline morphs via
+   SVG <animate>; here it just drifts and turns slowly. */
+.landing__liquid--plum {
+  top: 40px;
+  left: 50%;
+  width: 560px;
+  height: 560px;
+  margin-left: -280px;
+  opacity: 0.9;
+  filter: drop-shadow(0 30px 60px rgb(46 10 58 / 45%));
+  animation: landing-liquid-float 18s ease-in-out infinite;
+}
+
+/* Bright coral blob, lower right: border-radius morph (animate-blob). */
+.landing__liquid--coral {
+  right: calc(25vw - 40px);
+  bottom: 10px;
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, #ff8a6b, #ff4f6d 60%, #e0336e);
+  opacity: 0.85;
+  border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+  box-shadow: inset 0 -20px 40px rgb(120 10 50 / 30%);
+  animation:
+    landing-blob-morph 11s ease-in-out infinite,
+    landing-liquid-float 15s ease-in-out infinite reverse;
+}
+
+@keyframes landing-blob-morph {
+  0%,
+  100% {
+    border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+  }
+  33% {
+    border-radius: 70% 30% 46% 54% / 30% 39% 61% 70%;
+  }
+  66% {
+    border-radius: 34% 66% 38% 62% / 62% 52% 48% 38%;
+  }
+}
+
+/* Organic drift: a slow wander with a slight turn, using the standalone
+   translate/rotate properties so it never overrides other transforms. */
+@keyframes landing-liquid-float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  33% {
+    translate: 24px -18px;
+    rotate: 6deg;
+  }
+  66% {
+    translate: -18px 14px;
+    rotate: -5deg;
+  }
+}
+
+/* Small screens: shrink the blobs so they stay behind the text block. */
+@media (max-width: 640px) {
+  .landing__liquid--plum {
+    width: 380px;
+    height: 380px;
+    margin-left: -190px;
+    top: 100px;
+  }
+  .landing__liquid--coral {
+    width: 180px;
+    height: 180px;
+    right: calc(25vw - 60px);
+  }
+}
+
+.landing__cursor-glow {
+  position: absolute;
+  /* Undo the aurora's inset (120px top, 25vw left) and half the glow's size,
+     so translate(x, y) in hero coordinates centres the glow on the cursor. */
+  top: calc(120px - 260px);
+  left: calc(25vw - 260px);
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgb(217 70 239 / 85%) 0%,
+    rgb(236 72 153 / 60%) 32%,
+    rgb(168 85 247 / 30%) 58%,
+    transparent 72%
+  );
+  filter: blur(36px);
+  /* duration-500 ease-out: the glow eases after the cursor. */
+  transition: transform 500ms ease-out;
+  will-change: transform;
+}
+
+.landing__eyebrow {
+  margin-bottom: 16px;
+  padding: 6px 14px;
+  border: 1px solid var(--landing-glass-border);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: var(--landing-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.landing__title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.landing__lead {
+  max-width: 34rem;
+  margin-top: 20px;
+  color: var(--landing-muted);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+.landing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+/* --- Floating hero feature card ------------------------------------------ */
+/* The "Find anyone, instantly" card is a floating bento asset: its wrapper
+   drifts up and down 8px forever (animate-float), and the card inside tilts
+   toward the mouse via --tilt-x / --tilt-y set by the page's script. The
+   wrapper's perspective gives the tilt real depth. Reduce Motion stops both. */
+.landing__float {
+  height: 100%;
+  perspective: 1200px;
+  animation: landing-float 6s ease-in-out infinite;
+}
+
+@keyframes landing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.landing__card.landing__card--hero {
+  height: 100%;
+  transform: rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg));
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Scroll reveal: [data-reveal] elements fade and rise in when they scroll
+   into view (the page adds .is-revealed). They only start hidden once the
+   page's observer is running (.reveal-armed), so if the script never runs
+   the content simply shows. --reveal-delay staggers the cards. */
+.landing.reveal-armed [data-reveal] {
+  transition:
+    opacity 600ms ease,
+    transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.landing.reveal-armed [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.landing__preview-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--landing-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* --- Features ------------------------------------------------------------- */
+.landing__features,
+.landing__closing {
+  padding: 72px 0 0;
+}
+
+.landing__section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.625rem, 4vw, 2.25rem);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Bento grid: 1 column on phones, 2 on tablets, 3 on desktop.
+   Desktop is staggered: every row pairs one wide card with one narrow card,
+   and the wide card alternates sides, so the 3x3 is full but never uniform:
+     Row 1: [Find anyone  (wide)] [Edits]
+     Row 2: [Roles] [One-click actions  (wide)]
+     Row 3: [Built for everyone  (wide)] [Views]
+   Cards are addressed by position (nth-child) in FEATURES order. The DOM
+   order is unchanged, so screen readers still read them top to bottom. */
+.landing__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin: 36px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .landing__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* md:col-span-2 */
+  .landing__hero-slot {
+    grid-column: span 2;
+  }
+  /* Tablet: widen the last card so it isn't left alone on its row. */
+  .landing__grid > :last-child {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 960px) {
+  .landing__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* Row 2: "One-click account actions" is the wide card, on the right. */
+  .landing__grid > :nth-child(4) {
+    grid-column: span 2;
+  }
+  /* Row 3: "Built for everyone" is wide on the left, "Views" narrow on the right. */
+  .landing__grid > :nth-child(6) {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+  }
+  .landing__grid > :nth-child(5) {
+    grid-column: 3;
+    grid-row: 3;
+  }
+}
+
+/* Hero card: a touch more presence than the rest, with the demo pinned to
+   the bottom so the card's height is put to use. */
+.landing__card.landing__card--hero {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgb(167 139 250 / 22%), transparent 60%),
+    var(--landing-glass-bg);
+}
+
+.landing__card.landing__card--hero h3 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+}
+
+.landing__card.landing__card--hero > p {
+  max-width: 36rem;
+}
+
+/* Accent block: a small search in action. */
+.landing__demo {
+  margin-top: auto;
+  padding: 14px;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 18px;
+  background: rgb(20 12 70 / 28%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 18%);
+}
+
+.landing__card.landing__card--hero .landing__demo {
+  margin-top: 28px;
+}
+
+@media (min-width: 960px) {
+  .landing__card.landing__card--hero .landing__demo {
+    margin-top: auto;
+  }
+  .landing__card.landing__card--hero > p {
+    margin-bottom: 28px;
+  }
+}
+
+.landing__demo-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 12px;
+  background: rgb(255 255 255 / 12%);
+  font-weight: 600;
+}
+
+.landing__demo-search kbd {
+  margin-left: auto;
+  padding: 1px 6px;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 6px;
+  color: var(--landing-muted);
+  font-family: inherit;
+  font-size: 0.75rem;
+}
+
+.landing__demo-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: #ffffff;
+  animation: landing-caret 1s steps(1) infinite;
+}
+
+@keyframes landing-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.landing__demo-results {
+  display: grid;
+  gap: 4px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing__demo-results li {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+
+.landing__demo-results li:first-child {
+  background: rgb(255 255 255 / 12%);
+}
+
+.landing__demo-who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.landing__demo-who > span {
+  overflow: hidden;
+  color: var(--landing-muted);
+  font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landing__demo-who mark {
+  padding: 0 1px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 28%);
+  color: #ffffff;
+}
+
+.landing__demo-meta {
+  margin: 10px 4px 0;
+  color: var(--landing-muted);
+  font-size: 0.8125rem;
+}
+
+.landing__card {
+  padding: 24px;
+  border-radius: 24px;
+}
+
+.landing__card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  border: 1px solid rgb(255 255 255 / 40%);
+  border-radius: 50%;
+  background: linear-gradient(to bottom, rgb(255 255 255 / 30%), rgb(255 255 255 / 8%));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 70%);
+}
+
+.landing__card h3 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.landing__card p {
+  margin-top: 8px;
+  color: var(--landing-muted);
+  line-height: 1.55;
+}
+
+.landing__closing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 24px;
+}
+
+.landing__footer {
+  padding-top: 56px;
+  padding-bottom: 32px;
+  color: var(--landing-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .landing__nav,
+  .landing__main,
+  .landing__footer {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+  .landing__hero {
+    padding-top: 32px;
+  }
+  .landing__actions {
+    flex-direction: column;
+    align-self: stretch;
+  }
+  .landing__actions > * {
+    justify-content: center;
+  }
+  .landing__features,
+  .landing__closing {
+    padding-top: 56px;
+  }
+}

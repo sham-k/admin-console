@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <!-- Brand mark: a gold padlock whose body is the letter A (cut out, so the
+       tab bar shows through). Matches components/Padlock.tsx. -->
+  <defs>
+    <mask id="a">
+      <rect width="32" height="32" fill="#fff" />
+      <path d="M11.4 26.6 16 15.6l4.6 11" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M13.3 22.7h5.4" stroke="#000" stroke-width="2.1" stroke-linecap="round" />
+    </mask>
+  </defs>
+  <!-- Shackle seated over the A (locked). -->
+  <path d="M10.5 13.5V9.5a5.5 5.5 0 0 1 11 0v4" stroke="#b8862b" stroke-width="2.6" stroke-linecap="round" />
+  <rect x="6" y="12.5" width="20" height="17" rx="3.5" fill="#b8862b" mask="url(#a)" />
+</svg>
